@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dump Truck Haul Rate Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0;
+            box-sizing: border-box;
+        }
+        .result {
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 9px #999;
+        }
+        .button:hover {background-color: #3e8e41}
+        .button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dump Truck Haul Rate Calculator</h1>
+        <table>
+            <tr>
+                <th>Input Description</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Hourly Rate ($)</td>
+                <td><input type="number" id="hourlyRate" value="150"></td>
+            </tr>
+            <tr>
+                <td>Haul Capacity (Tons)</td>
+                <td><input type="number" id="haulCapacity" value="18"></td>
+            </tr>
+            <tr>
+                <td>One-Way Travel Time (min)</td>
+                <td><input type="number" id="travelTime" value="26"></td>
+            </tr>
+            <tr>
+                <td>Loading Time (min)</td>
+                <td><input type="number" id="loadingTime" value="10"></td>
+            </tr>
+            <tr>
+                <td>Unloading Time (min)</td>
+                <td><input type="number" id="unloadingTime" value="10"></td>
+            </tr>
+            <tr>
+                <td>Admin Fee Percentage (%)</td>
+                <td><input type="number" id="adminFeePercentage" value="5"></td>
+            </tr>
+        </table>
+        <button class="button" onclick="calculateHaulRate()">Calculate Haul Rate</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateHaulRate() {
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value);
+            const haulCapacity = parseFloat(document.getElementById('haulCapacity').value);
+            const travelTime = parseFloat(document.getElementById('travelTime').value);
+            const loadingTime = parseFloat(document.getElementById('loadingTime').value);
+            const unloadingTime = parseFloat(document.getElementById('unloadingTime').value);
+            const adminFeePercentage = parseFloat(document.getElementById('adminFeePercentage').value);
+
+            // Calculate total time for one-way trip in minutes
+            const totalTimeMinutes = travelTime + loadingTime + unloadingTime;
+
+            // Convert total time to hours
+            const totalTimeHours = totalTimeMinutes / 60;
+
+            // Calculate total earnings required for one trip
+            const totalEarningsRequired = hourlyRate * totalTimeHours;
+
+            // Calculate by-the-ton haul rate
+            const haulRatePerTon = totalEarningsRequired / haulCapacity;
+
+            // Calculate the admin fee amount
+            const adminFeeAmount = haulRatePerTon * (adminFeePercentage / 100);
+
+            // Calculate the final freight pay including the admin fee
+            const freightPay = haulRatePerTon + adminFeeAmount;
+
+            // Display the results
+            document.getElementById('result').innerHTML = `
+                <p>The by-the-ton haul rate is $${haulRatePerTon.toFixed(2)}</p>
+                <p>Admin fee is $${adminFeeAmount.toFixed(2)} per ton (${adminFeePercentage}%)</p>
+                <p><strong>Final Freight Pay (including admin fee) is $${freightPay.toFixed(2)} per ton</strong></p>
+            `;
+        }
+    </script>
+</body>
+</html>
